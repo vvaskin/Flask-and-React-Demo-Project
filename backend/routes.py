@@ -40,3 +40,18 @@ def create_friend():
         db.session.rollback()
         return jsonify({"error":str(e)}), 500
     
+# int:id is flask syntax that creates a dynamic variable
+@app.route("/api/friends/<int:id>",methods=["DELETE"])
+def delete_friend(id):
+    print(id)
+    try:
+        friend = Friend.query.get(id)
+        if friend is None:
+            return jsonify({"error":"Friend not found"}), 404
+
+        db.session.delete(friend)
+        db.session.commit()
+        return jsonify({"msg":"friend deleted"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error":str(e)}), 500
